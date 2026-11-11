@@ -1,12 +1,61 @@
 # Sports League Management System
 
+![Sorting](https://img.shields.io/badge/Sorting-Bubble%20Sort-orange)
+![Language](https://img.shields.io/badge/Language-Java-blue)
+![Interface](https://img.shields.io/badge/Interface-Console-lightgrey)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-336791)
+
 A **console-based Java application** built as a **homework/assignment project** for managing **Football**, **Volleyball**, and **Basketball** leagues, plus a collection of **PostgreSQL** practice queries from the same assignment.
 
 The Java part supports adding clubs, recording matches, storing match history, removing clubs, displaying rankings, finding top-scoring clubs, and calculating total points across all leagues. It is built with core OOP concepts: interfaces, abstract classes, inheritance, polymorphism, and plain arrays.
 
 **Author:** Reza Asadipour  
 **Type:** Homework / Assignment project  
-**Interface:** Console (terminal) — no GUI
+**Interface:** Console (terminal) — no GUI  
+**Sorting Algorithm:** **Bubble Sort** ⭐
+
+---
+
+## ⭐ Bubble Sort (Highlighted)
+
+Rankings are sorted **exclusively with Bubble Sort** — no `Arrays.sort()`, no `Collections.sort()`, no built-in sorting utilities.
+
+- **Where:** `League.sortClubs()`
+- **Algorithm:** classic Bubble Sort with nested loops and adjacent swaps
+- **Primary key:** `points` (descending)
+- **Tie-breaker:** `goalDifference` (descending)
+- **Optimization:** `swapped` flag for early exit when the array is already sorted
+- **When it runs:** every time the user picks menu option **8. Display All League Rankings** (called on all three leagues before displaying)
+
+```java
+public void sortClubs() {
+    for (int i = 0; i < clubCount - 1; i++) {
+        boolean swapped = false;
+        for (int j = 0; j < clubCount - i - 1; j++) {
+            if (clubs[j].getPoints() < clubs[j + 1].getPoints() ||
+                    (clubs[j].getPoints() == clubs[j + 1].getPoints()
+                            && clubs[j].getGoalDifference() < clubs[j + 1].getGoalDifference())) {
+
+                Club temporary = clubs[j];
+                clubs[j] = clubs[j + 1];
+                clubs[j + 1] = temporary;
+                swapped = true;
+            }
+        }
+        if (!swapped)
+            break;
+    }
+}
+```
+
+| Bubble Sort requirement | Status |
+|---|---|
+| Implemented with nested loops + swap | ✅ |
+| Sorts by points (primary) | ✅ |
+| Sorts by goal difference (tie-breaker) | ✅ |
+| Early-exit optimization | ✅ |
+| Called before every ranking display | ✅ |
+| No built-in sort used anywhere | ✅ |
 
 ---
 
@@ -20,7 +69,7 @@ SportsLeagueManagementSystem/
 │   ├── Rankable.java
 │   ├── Matchable.java
 │   ├── Club.java
-│   ├── League.java
+│   ├── League.java                # ← sortClubs() lives here (Bubble Sort)
 │   ├── FootballLeague.java
 │   ├── VolleyballLeague.java
 │   └── BasketballLeague.java
@@ -41,7 +90,7 @@ SportsLeagueManagementSystem/
 - Record matches and automatically update club statistics
 - Store match history — maximum **100 matches** per league
 - Remove a club while keeping the club array **compact** (no empty gaps)
-- Display rankings sorted by points, then goal difference, using **Bubble Sort**
+- **Rankings sorted via Bubble Sort** by points, then goal difference
 - Show the **top-scoring club** in each league (returns `null` if the league is empty)
 - Calculate the **total points of all clubs** across all leagues
 - Display a full ranking table: matches played, wins, draws, losses, goals for, goals against, goal difference, and points
@@ -80,7 +129,7 @@ SportsLeagueManagementSystem/
 - `Club` implements `Rankable`
 - `League` (abstract) implements `Matchable`
   - Abstract: `calculatePoints(...)`, `addClub(...)`, `findClub(...)`
-  - Shared helpers: `addToLeague(...)`, `addToMatch(...)`, `sortClubs()`, `displayRankings()`, `displayMatchHistory()`, `removeClub(...)`, `getTopScoringClub()`
+  - Shared helpers: `addToLeague(...)`, `addToMatch(...)`, **`sortClubs()` (Bubble Sort)**, `displayRankings()`, `displayMatchHistory()`, `removeClub(...)`, `getTopScoringClub()`
 - `FootballLeague`, `VolleyballLeague`, `BasketballLeague` extend `League` with their own scoring rules
 - `Match` stores match details
 - `Main` provides the console menu UI
@@ -99,7 +148,7 @@ SportsLeagueManagementSystem/
 
 7.  Remove Club from League
 
-8.  Display All League Rankings
+8.  Display All League Rankings     ← triggers Bubble Sort
 9.  Show Match History
 10. Show Top Scoring Club per League
 11. Show Total Points of All Clubs
@@ -118,7 +167,7 @@ java Main
 
 - Console-based only (no GUI)
 - Plain arrays only — no `ArrayList`
-- Bubble Sort inside `sortClubs()`
+- **Bubble Sort inside `sortClubs()`** — no built-in sort anywhere
 - Max **20 clubs** and **100 matches** per league
 - Clear success and error messages for every operation
 
